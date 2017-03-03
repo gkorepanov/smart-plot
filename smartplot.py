@@ -1,6 +1,12 @@
 import matplotlib.pylab as _plt
 from matplotlib import rc
 
+import numpy as np
+import pandas as pd
+import sympy as sp
+import statsmodels.api as sm
+import math
+
 # Plot size
 _plt.rcParams['figure.figsize'] = (8, 5)
 
@@ -23,31 +29,34 @@ _plt.rcParams.update(params)
 # Get fig, ax
 _fig, _ax = _plt.subplots()
 _res = _plt.gcf()
+_row = 0
 
 
+def addplot(input="data.csv", units=None, label=None, labelx = 0.05, labely = 0.9, xerr=None, yerr=None, number=1):
 
-
-def addplot(input="data.csv", units=None, label=None, labelx = 0.05, labely = 0.9, xerr=None, yerr=None):
-    import numpy as np
-    import pandas as pd
-    import sympy as sp
-    import statsmodels.api as sm
-    import math
+    if number > 1:
+        for count in range(number):
+            addplot(input=input, xerr=xerr, yerr=yerr, number=0)
+        return
 
 # Load data
     data = pd.read_csv(input, engine='python', header=None)
 
 # Exract arrays
-    x = np.array(data[0])
-    y = np.array(data[1])
+    global _row
+    x = np.array(data[_row])
+    _row += 1
+    y = np.array(data[_row])
+    _row += 1
+
     t = sm.add_constant(x, prepend=False)
 
-    row = 2
     if xerr:
         xerr = np.array(data[row])
-        rows += 1
+        _row +=1
     if yerr:
         yerr = np.array(data[row])
+        _row +=1
         
 # Fitting
     model = sm.OLS(y, t)
@@ -59,8 +68,8 @@ def addplot(input="data.csv", units=None, label=None, labelx = 0.05, labely = 0.
 
 
 # Showing result
-    result.summary().tables[1]
-
+    from IPython.display import display
+    display(result.summary().tables[1])
 
 # Caclculate ranges
     xmin = min(data[0])
@@ -94,7 +103,9 @@ def addplot(input="data.csv", units=None, label=None, labelx = 0.05, labely = 0.
 
 # Grid
     _ax.grid(color='#e5e5e5', linestyle='--', linewidth=0.2)
-
+    
+    if number > 0:
+        _row = 0
 
 '''
 # Updating axes limits
@@ -107,7 +118,6 @@ def addplot(input="data.csv", units=None, label=None, labelx = 0.05, labely = 0.
     _plt.xlim(getlim(_plt.xlim(), xmin))
     _plt.ylim(getlim(_plt.ylim(), ymin))
 '''
-
 
 def axes(xlabel=None, ylabel=None):
     _plt.xlabel(xlabel)
