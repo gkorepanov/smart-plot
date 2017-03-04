@@ -8,7 +8,7 @@ import statsmodels.api as sm
 import math
 
 # Plot size
-_plt.rcParams['figure.figsize'] = (8, 5)
+_plt.rcParams['figure.figsize'] = (16, 9)
 
 # LaTeX
 rc('text.latex', preamble=r"\usepackage[utf8]{inputenc}")
@@ -19,7 +19,7 @@ rc('text.latex', unicode=True)
 
 # Options
 params = {'text.usetex' : True,
-      'font.size' : 11,
+      'font.size' : 20,
       'font.family' : 'lmodern',
       'text.latex.unicode': True,
       }
@@ -32,18 +32,19 @@ _res = _plt.gcf()
 _row = 0
 
 
-def addplot(input="data.csv", units=None, label=None, labelx = 0.05, labely = 0.9, xerr=None, yerr=None, number=1):
+def addplot(input="data.csv", units="", label=None, labelx = 0.05, labely = 0.9, xerr=None, yerr=None, number=1):
+    global _row
 
     if number > 1:
         for count in range(number):
             addplot(input=input, xerr=xerr, yerr=yerr, number=0)
+        _row = 0
         return
 
 # Load data
     data = pd.read_csv(input, engine='python', header=None)
 
 # Exract arrays
-    global _row
     x = np.array(data[_row])
     _row += 1
     y = np.array(data[_row])
@@ -91,7 +92,8 @@ def addplot(input="data.csv", units=None, label=None, labelx = 0.05, labely = 0.
         
 
 # Plot
-    _plt.plot(data[0], data[1],'ro', np.linspace(xmin, xmax), np.linspace(xmin, xmax)*s + i,'k--')
+    _plt.plot(x, y, linestyle='None', marker='o', color='r', markersize = 7)
+    _plt.plot(np.linspace(xmin, xmax), np.linspace(xmin, xmax)*s + i,'k--', linewidth=0.5)
     if xerr or yerr:
         _plt.errorbar(x, y, xerr=xerr, yerr=yerr)
         
@@ -107,17 +109,6 @@ def addplot(input="data.csv", units=None, label=None, labelx = 0.05, labely = 0.
     if number > 0:
         _row = 0
 
-'''
-# Updating axes limits
-
-    def getlim(lim, lval):
-        l, r = lim
-        return (0, r) if (lval == 0) else (l, r)
-
-
-    _plt.xlim(getlim(_plt.xlim(), xmin))
-    _plt.ylim(getlim(_plt.ylim(), ymin))
-'''
 
 def axes(xlabel=None, ylabel=None):
     _plt.xlabel(xlabel)
