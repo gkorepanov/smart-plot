@@ -19,10 +19,6 @@ params = {
 
 _plt.rcParams.update(params)
 
-# Get fig, ax
-_fig, _ax = _plt.subplots()
-_res = _plt.gcf()
-
 
 def addplot(
         input  = "data.csv",
@@ -35,32 +31,30 @@ def addplot(
         number = 1
         ):
 
-    # Set attribute (static)
-    try:
-        addplot._row
-    except AttributeError:
-        addplot._row = 0
-
-    # Recursive wrapper
+    # Iterative wrapper
     if number:
+        # Initialize attributes (static)
+        addplot._row  = 0
+        addplot._data = pd.read_csv(input, engine='python', header=None)
+        addplot._axes = _plt.subplots()[1]
+
         for count in range(number):
             addplot(input=input, xerr=xerr, yerr=yerr, number=None)
-        addplot._row = 0
+
+        # Destroy 'em'
+        del addplot._row, addplot._data, addplot._axes
         return
 
     # Load data
-    data = pd.read_csv(input, engine='python', header=None)
-
-    # Extract arrays
-    x = np.array(data[  addplot._row  ])
-    y = np.array(data[addplot._row + 1])
+    x = np.array(addplot._data[  addplot._row  ])
+    y = np.array(addplot._data[addplot._row + 1])
     addplot._row += 2
 
     if xerr:
-        xerr  = np.array(data[addplot._row])
+        xerr  = np.array(addplot._data[addplot._row])
         addplot._row += 1
     if yerr:
-        yerr  = np.array(data[addplot._row])
+        yerr  = np.array(addplot._data[addplot._row])
         addplot._row += 1
 
     # Fit
@@ -76,10 +70,10 @@ def addplot(
         display(result.summary().tables[1])
 
     # Calculate ranges
-    xmin = min(data[0])
-    xmax = max(data[0])
-    ymin = min(data[1])
-    ymax = max(data[1])
+    xmin = min(addplot._data[0])
+    xmax = max(addplot._data[0])
+    ymin = min(addplot._data[1])
+    ymax = max(addplot._data[1])
 
     # Heuristics, starting from 0 is more beautiful when
     # there is not too much empty space
@@ -101,10 +95,10 @@ def addplot(
     # Label text
     if label:
         label = r"$K=(" + "{:.3f}".format(s) + r"\pm" + "{:.3f}".format(s_err) + ")$ " + units
-        _ax.text(labelx, labely, label, transform=_ax.transAxes, bbox={'facecolor':'white', 'edgecolor':'black', 'pad':10})
+        addplot._axes.text(labelx, labely, label, transform=_ax.transAxes, bbox={'facecolor':'white', 'edgecolor':'black', 'pad':10})
 
     # Grid
-    _ax.grid(color='#e5e5e5', linestyle='--', linewidth=0.2)
+    addplot._axes.grid(color='#e5e5e5', linestyle='--', linewidth=0.2)
 
 
 def axes(xlabel=None, ylabel=None):
