@@ -45,9 +45,13 @@ def addplot(
         del addplot._row, addplot._data, addplot._axes
         return
 
-    # Load data
+    # Load data & calculate ranges
     x = np.array(addplot._data[  addplot._row  ])
     y = np.array(addplot._data[addplot._row + 1])
+
+    xmin, xmax = min(addplot._data[  addplot._row  ]), max(addplot._data[  addplot._row  ])
+    ymin, ymax = min(addplot._data[addplot._row + 1]), max(addplot._data[addplot._row + 1])
+
     addplot._row += 2
 
     if xerr:
@@ -69,26 +73,16 @@ def addplot(
         warnings.simplefilter("ignore")
         display(result.summary().tables[1])
 
-    # Calculate ranges
-    xmin = min(addplot._data[0])
-    xmax = max(addplot._data[0])
-    ymin = min(addplot._data[1])
-    ymax = max(addplot._data[1])
-
-    # Heuristics, starting from 0 is more beautiful when
-    # there is not too much empty space
+    # Heuristics, starting from (0, 0) when not too much empty space
     def need_0(l, r):
         return True if (r > 0 and l > 0 and l/r < 0.2) else False
 
-    if need_0(xmin, xmax):
-        xmin = 0
-
-    if need_0(ymin, ymax):
-        ymin = 0
+    if need_0(xmin, xmax) and need_0(ymin, ymax):
+        xmin, ymin = 0, 0
 
     # Plot
     _plt.plot(x, y, linestyle='None', marker='o', color='r', markersize = 7)
-    _plt.plot(np.linspace(xmin, xmax), np.linspace(xmin, xmax)*s + i,'k--', linewidth=0.5)
+    _plt.plot(np.linspace(xmin, xmax), np.linspace(xmin, xmax)*s + i, 'k--', linewidth=0.5)
     if xerr or yerr:
         _plt.errorbar(x, y, xerr=xerr, yerr=yerr)
 
