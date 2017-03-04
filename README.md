@@ -1,52 +1,16 @@
 
-# Plotting with Ease
-
-### Set the file, units and axis labels:
-
 
 ```python
-filename = "data.csv"
-units  = r"м$/$с"
-
-xlabel = 'Ось X, м'
-ylabel = 'Ось Y, с'
+import smartplot
 ```
 
 
 ```python
-import numpy as np
-import pandas as pd
-import sympy as sp
-import statsmodels.api as sm
-import math
-
-# Load data
-data = pd.read_csv(filename, engine='python', header=None)
-
-# Exract arrays
-y = np.array(data[1])
-t = np.array(data[0])
-t = sm.add_constant(t, prepend=False)
-
-# Fitting
-model = sm.OLS(y,t)
-result = model.fit()
-
-# Saving parameters
-s_err, i_err = result.bse
-s, i = result.params
+smartplot.addplot("data2.csv", number=4)
 ```
 
-
-```python
-# Showing result
-result.summary().tables[1]
-```
-
-    /home/smart/anaconda3/lib/python3.6/site-packages/scipy/stats/stats.py:1327: UserWarning: kurtosistest only valid for n>=20 ... continuing anyway, n=18
-      "anyway, n=%i" % int(n))
-
-
+    /home/smart/anaconda3/lib/python3.6/site-packages/statsmodels/stats/stattools.py:72: UserWarning: omni_normtest is not valid with less than 8 observations; 7 samples were given.
+      "samples were given." % int(n))
 
 
 
@@ -55,58 +19,64 @@ result.summary().tables[1]
     <td></td>       <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P>|t|</th> <th>[95.0% Conf. Int.]</th> 
 </tr>
 <tr>
-  <th>x1</th>    <td>    2.0041</td> <td>    0.009</td> <td>  221.228</td> <td> 0.000</td> <td>    1.985     2.023</td>
+  <th>x1</th>    <td>    0.1521</td> <td>    0.001</td> <td>  234.648</td> <td> 0.000</td> <td>    0.150     0.154</td>
 </tr>
 <tr>
-  <th>const</th> <td>    0.0052</td> <td>    0.098</td> <td>    0.053</td> <td> 0.958</td> <td>   -0.203     0.213</td>
+  <th>const</th> <td>   -0.0027</td> <td>    0.002</td> <td>   -1.161</td> <td> 0.298</td> <td>   -0.009     0.003</td>
 </tr>
 </table>
 
 
 
+<table class="simpletable">
+<tr>
+    <td></td>       <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P>|t|</th> <th>[95.0% Conf. Int.]</th> 
+</tr>
+<tr>
+  <th>x1</th>    <td>    0.1640</td> <td>    0.001</td> <td>  141.739</td> <td> 0.000</td> <td>    0.161     0.167</td>
+</tr>
+<tr>
+  <th>const</th> <td>    0.0023</td> <td>    0.004</td> <td>    0.548</td> <td> 0.607</td> <td>   -0.008     0.013</td>
+</tr>
+</table>
+
+
+
+<table class="simpletable">
+<tr>
+    <td></td>       <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P>|t|</th> <th>[95.0% Conf. Int.]</th> 
+</tr>
+<tr>
+  <th>x1</th>    <td>    0.1763</td> <td>    0.001</td> <td>  201.243</td> <td> 0.000</td> <td>    0.174     0.179</td>
+</tr>
+<tr>
+  <th>const</th> <td>    0.0026</td> <td>    0.003</td> <td>    0.814</td> <td> 0.453</td> <td>   -0.006     0.011</td>
+</tr>
+</table>
+
+
+
+<table class="simpletable">
+<tr>
+    <td></td>       <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P>|t|</th> <th>[95.0% Conf. Int.]</th> 
+</tr>
+<tr>
+  <th>x1</th>    <td>    0.1894</td> <td>    0.000</td> <td>  855.929</td> <td> 0.000</td> <td>    0.189     0.190</td>
+</tr>
+<tr>
+  <th>const</th> <td>   -0.0003</td> <td>    0.001</td> <td>   -0.358</td> <td> 0.735</td> <td>   -0.002     0.002</td>
+</tr>
+</table>
+
+
 
 ```python
-import matplotlib.pylab as plt
-from matplotlib import rc
-# Plot size
-plt.rcParams['figure.figsize'] = (8, 5)
-
-rc('text.latex', preamble=r"\usepackage[utf8]{inputenc}")
-rc('text.latex', preamble=r"\usepackage[russian]{babel}")
-rc('text.latex', preamble=r"\usepackage{lmodern}")
-rc('text.latex', preamble=r"\usepackage[T2A]{fontenc}")
-rc('text.latex', unicode=True)
-
-# Options
-params = {'text.usetex' : True,
-          'font.size' : 11,
-          'font.family' : 'lmodern',
-          'text.latex.unicode': True,
-          }
-
-plt.rcParams.update(params)
-fig, ax = plt.subplots()
-
-plt.plot(data[0],data[1],'ro', np.arange(0,20), np.arange(0,20)*s+i,'k--')
-
-plt.xlabel(xlabel)
-plt.ylabel(ylabel)
-
-
-
-label = r"$K=(" + "{:.3f}".format(s) + r"\pm" + "{:.3f}".format(s_err) + ")$ " + units
-ax.text(0.05, 0.9, label, transform=ax.transAxes, bbox={'facecolor':'white', 'edgecolor':'black', 'pad':10})
-
-ax.grid(color='#e5e5e5', linestyle='--', linewidth=0.2)
-
-res = plt.gcf()
+smartplot.axes(r"$x_m$, мм", r"m")
 ```
 
-### View and Save:
-
 
 ```python
-plt.show()
+smartplot.show()
 ```
 
 
@@ -115,10 +85,5 @@ plt.show()
 
 
 ```python
-# Save file
-res.savefig("graph.pdf", 
-            dpi=1000, 
-            # Plot will be occupy a maximum of available space
-            bbox_inches='tight', 
-            )
+
 ```
