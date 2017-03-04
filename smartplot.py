@@ -1,11 +1,9 @@
 import matplotlib.pylab as _plt
 from matplotlib import rc
 
-import numpy as np
 import pandas as pd
-import sympy as sp
+import numpy as np
 import statsmodels.api as sm
-import math
 import warnings
 
 # Plot size
@@ -73,7 +71,9 @@ def addplot(input="data.csv", units="", label=None, labelx = 0.05, labely = 0.9,
 
 # Showing result
     from IPython.display import display
-    display(result.summary().tables[1])
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        display(result.summary().tables[1])
 
 # Caclculate ranges
     xmin = min(data[0])
