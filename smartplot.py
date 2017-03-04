@@ -58,7 +58,7 @@ def addplot(input="data.csv", units="", label=None, labelx = 0.05, labely = 0.9,
     if yerr:
         yerr = np.array(data[row])
         _row +=1
-        
+
 # Fitting
     model = sm.OLS(y, t)
     result = model.fit()
@@ -82,21 +82,21 @@ def addplot(input="data.csv", units="", label=None, labelx = 0.05, labely = 0.9,
 # there is not too much empty space
     def need_0(l, r):
         return True if (r > 0 and l > 0 and l/r < 0.2) else False
-          
+
     if need_0(xmin, xmax):
         xmin = 0
-        
+
     if need_0(ymin, ymax):
         ymin = 0
-        
-        
+
+
 
 # Plot
     _plt.plot(x, y, linestyle='None', marker='o', color='r', markersize = 7)
     _plt.plot(np.linspace(xmin, xmax), np.linspace(xmin, xmax)*s + i,'k--', linewidth=0.5)
     if xerr or yerr:
         _plt.errorbar(x, y, xerr=xerr, yerr=yerr)
-        
+
 
 # Label text
     if label:
@@ -105,7 +105,7 @@ def addplot(input="data.csv", units="", label=None, labelx = 0.05, labely = 0.9,
 
 # Grid
     _ax.grid(color='#e5e5e5', linestyle='--', linewidth=0.2)
-    
+
     if number > 0:
         _row = 0
 
@@ -115,17 +115,15 @@ def axes(xlabel=None, ylabel=None):
     _plt.ylabel(ylabel)
 
 
-def show(save=False, output="graph.png"):
+def show(save=False, output="graph.png", dpi=300):
 # Save file
-    _plt.savefig(output, 
-                dpi=1000, 
+    _plt.savefig(output,
+                dpi=dpi,
                 # Plot will be occupy a maximum of available space
-                bbox_inches='tight', 
+                bbox_inches='tight',
                 )
 
 # ### View and Save:
     _plt.show()
     _plt.cla()
     _plt.clf()
-    
-
