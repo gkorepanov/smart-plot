@@ -118,11 +118,11 @@ def axes(xlabel=None, ylabel=None):
     _plt.ylabel(ylabel)
 
 
-def show(save=False, output="graph.png"):
+def show(save=False, output="graph.png", dpi=300):
 # Save file
     _plt.savefig(output,
-                dpi=1000,
-                # Plot will be occupy a maximum of available space
+                dpi=dpi,
+                # Plot will occupy a maximum of available space
                 bbox_inches='tight',
                 )
 
