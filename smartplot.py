@@ -115,20 +115,17 @@ def axes(xlabel=None, ylabel=None):
     _plt.ylabel(ylabel)
 
 
-def show():
-# Save into variable
-    _res = _plt.gcf()
-# ### View and Save:
-    _plt.show()
-    
-
-
-def save(output="graph.pdf"):
-
+def show(save=False, output="graph.png"):
 # Save file
-    _res.savefig(output, 
+    _plt.savefig(output, 
                 dpi=1000, 
                 # Plot will be occupy a maximum of available space
                 bbox_inches='tight', 
                 )
+
+# ### View and Save:
+    _plt.show()
+    _plt.cla()
+    _plt.clf()
+    
 
