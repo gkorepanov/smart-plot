@@ -2,16 +2,8 @@
 
 ```python
 import smartplot
-```
-
-
-```python
 smartplot.addplot("data2.csv", number=4)
 ```
-
-    /home/smart/anaconda3/lib/python3.6/site-packages/statsmodels/stats/stattools.py:72: UserWarning: omni_normtest is not valid with less than 8 observations; 7 samples were given.
-      "samples were given." % int(n))
-
 
 
 <table class="simpletable">
@@ -72,18 +64,7 @@ smartplot.addplot("data2.csv", number=4)
 
 ```python
 smartplot.axes(r"$x_m$, мм", r"m")
-```
-
-
-```python
 smartplot.show()
 ```
 
-
-![png](example.png)
-
-
-
-```python
-
-```
+![Sample image](example.png)
