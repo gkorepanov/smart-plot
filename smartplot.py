@@ -6,22 +6,16 @@ import numpy as np
 import statsmodels.api as sm
 import warnings
 
-# Plot size
-_plt.rcParams['figure.figsize'] = (16, 9)
-
-# LaTeX
-rc('text.latex', preamble=r"\usepackage[utf8]{inputenc}")
-rc('text.latex', preamble=r"\usepackage[russian]{babel}")
-rc('text.latex', preamble=r"\usepackage{lmodern}")
-rc('text.latex', preamble=r"\usepackage[T2A]{fontenc}")
-rc('text.latex', unicode=True)
 
 # Options
-params = {'text.usetex' : True,
-      'font.size' : 20,
-      'font.family' : 'lmodern',
-      'text.latex.unicode': True,
-      }
+params = {
+    'text.usetex'         : True,
+    'text.latex.unicode'  : True,
+    'text.latex.preamble' : r"\usepackage[T2A]{fontenc}",
+    'font.size'           : 20,
+    'font.family'         : 'lmodern',
+    'figure.figsize'      : (16, 9),
+    }
 
 _plt.rcParams.update(params)
 
