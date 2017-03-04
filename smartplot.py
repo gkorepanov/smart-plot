@@ -1,10 +1,10 @@
 import matplotlib.pylab as _plt
-from matplotlib import rc
-
+from   matplotlib import rc
 import pandas as pd
 import numpy as np
 import statsmodels.api as sm
 import warnings
+from   IPython.display import display
 
 
 # Options
@@ -25,58 +25,59 @@ _res = _plt.gcf()
 _row = 0
 
 
-def addplot(input="data.csv", units="", label=None, labelx = 0.05, labely = 0.9, xerr=None, yerr=None, number=1):
+def addplot(
+        input  = "data.csv",
+        units  = "",
+        label  = None,
+        labelx = 0.05,
+        labely = 0.9,
+        xerr   = None,
+        yerr   = None,
+        number = 1
+        ):
     global _row
 
-    if number > 1:
+    if number:
         for count in range(number):
-            addplot(input=input, xerr=xerr, yerr=yerr, number=0)
+            addplot(input=input, xerr=xerr, yerr=yerr, number=None)
         _row = 0
         return
 
-# Load data
+    # Load data
     data = pd.read_csv(input, engine='python', header=None)
 
-# Exract arrays
-    x = np.array(data[_row])
-    _row += 1
-    y = np.array(data[_row])
-    _row += 1
-
-    with warnings.catch_warnings():
-        warnings.simplefilter("ignore")
-        t = sm.add_constant(x, prepend=False)
+    # Extract arrays
+    x = np.array(data[  _row  ])
+    y = np.array(data[_row + 1])
+    _row += 2
 
     if xerr:
-        xerr = np.array(data[row])
-        _row +=1
+        xerr  = np.array(data[_row])
+        _row += 1
     if yerr:
-        yerr = np.array(data[row])
-        _row +=1
+        yerr  = np.array(data[_row])
+        _row += 1
 
-# Fitting
-    model = sm.OLS(y, t)
+    # Fit
+    t = sm.add_constant(x, prepend=False)
+    model  = sm.OLS(y, t)
     result = model.fit()
-
-# Saving parameters
+    s,     i     = result.params
     s_err, i_err = result.bse
-    s, i = result.params
 
-
-# Showing result
-    from IPython.display import display
+    # Show result
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
         display(result.summary().tables[1])
 
-# Caclculate ranges
+    # Calculate ranges
     xmin = min(data[0])
     xmax = max(data[0])
     ymin = min(data[1])
     ymax = max(data[1])
 
-# Heuristics, starting from 0 is more beautiful when
-# there is not too much empty space
+    # Heuristics, starting from 0 is more beautiful when
+    # there is not too much empty space
     def need_0(l, r):
         return True if (r > 0 and l > 0 and l/r < 0.2) else False
 
@@ -86,25 +87,19 @@ def addplot(input="data.csv", units="", label=None, labelx = 0.05, labely = 0.9,
     if need_0(ymin, ymax):
         ymin = 0
 
-
-
-# Plot
+    # Plot
     _plt.plot(x, y, linestyle='None', marker='o', color='r', markersize = 7)
     _plt.plot(np.linspace(xmin, xmax), np.linspace(xmin, xmax)*s + i,'k--', linewidth=0.5)
     if xerr or yerr:
         _plt.errorbar(x, y, xerr=xerr, yerr=yerr)
 
-
-# Label text
+    # Label text
     if label:
         label = r"$K=(" + "{:.3f}".format(s) + r"\pm" + "{:.3f}".format(s_err) + ")$ " + units
         _ax.text(labelx, labely, label, transform=_ax.transAxes, bbox={'facecolor':'white', 'edgecolor':'black', 'pad':10})
 
-# Grid
+    # Grid
     _ax.grid(color='#e5e5e5', linestyle='--', linewidth=0.2)
-
-    if number > 0:
-        _row = 0
 
 
 def axes(xlabel=None, ylabel=None):
