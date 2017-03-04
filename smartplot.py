@@ -22,7 +22,6 @@ _plt.rcParams.update(params)
 # Get fig, ax
 _fig, _ax = _plt.subplots()
 _res = _plt.gcf()
-_row = 0
 
 
 def addplot(
@@ -35,28 +34,34 @@ def addplot(
         yerr   = None,
         number = 1
         ):
-    global _row
 
+    # Set attribute (static)
+    try:
+        addplot._row
+    except AttributeError:
+        addplot._row = 0
+
+    # Recursive wrapper
     if number:
         for count in range(number):
             addplot(input=input, xerr=xerr, yerr=yerr, number=None)
-        _row = 0
+        addplot._row = 0
         return
 
     # Load data
     data = pd.read_csv(input, engine='python', header=None)
 
     # Extract arrays
-    x = np.array(data[  _row  ])
-    y = np.array(data[_row + 1])
-    _row += 2
+    x = np.array(data[  addplot._row  ])
+    y = np.array(data[addplot._row + 1])
+    addplot._row += 2
 
     if xerr:
-        xerr  = np.array(data[_row])
-        _row += 1
+        xerr  = np.array(data[addplot._row])
+        addplot._row += 1
     if yerr:
-        yerr  = np.array(data[_row])
-        _row += 1
+        yerr  = np.array(data[addplot._row])
+        addplot._row += 1
 
     # Fit
     t = sm.add_constant(x, prepend=False)
