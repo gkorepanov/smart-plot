@@ -80,7 +80,7 @@ smartplot.show()
 ```
 
 
-![png](README.png)
+![png](example.png)
 
 
 
