@@ -89,7 +89,7 @@ def addplot(
     # Label text
     if label:
         label = r"$K=(" + "{:.3f}".format(s) + r"\pm" + "{:.3f}".format(s_err) + ")$ " + units
-        addplot._axes.text(labelx, labely, label, transform=_ax.transAxes, bbox={'facecolor':'white', 'edgecolor':'black', 'pad':10})
+        addplot._axes.text(labelx, labely, label, transform=addplot._axes.transAxes, bbox={'facecolor':'white', 'edgecolor':'black', 'pad':10})
 
     # Grid
     addplot._axes.grid(color='#e5e5e5', linestyle='--', linewidth=0.2)
@@ -100,15 +100,16 @@ def axes(xlabel=None, ylabel=None):
     _plt.ylabel(ylabel)
 
 
-def show(save=False, output="graph.png"):
-# Save file
-    _plt.savefig(output,
-                dpi=1000,
-                # Plot will be occupy a maximum of available space
-                bbox_inches='tight',
-                )
-
-# ### View and Save:
+def show(output="graph.png", dpi=300, save=False):
+    if save:
+        _plt.savefig(
+            output,
+            dpi = dpi,
+            bbox_inches = 'tight'  # Plot occupies maximum of available space
+        )
     _plt.show()
+
+
+def clear():
     _plt.cla()
     _plt.clf()
